@@ -3,7 +3,6 @@ package philosophen;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 public class Philosoph implements Runnable {
@@ -12,17 +11,14 @@ public class Philosoph implements Runnable {
 	private static AtomicInteger nextId = new AtomicInteger();
 	private Integer id;
 
-	private ReentrantLock linkeGabel;
-	private ReentrantLock rechteGabel;
 	private AtomicBoolean isHungry = new AtomicBoolean(false);
-
+	private Tisch tisch;
 	private Random randomGenerator = new Random();
 
-	public Philosoph(ReentrantLock linkeGabel, ReentrantLock rechteGabel) {
+	public Philosoph(Tisch tisch) {
 		this.id = nextId.incrementAndGet();
 		LOG.info(this.toString() + " erzeugt");
-		this.linkeGabel = linkeGabel;
-		this.rechteGabel = rechteGabel;
+		this.tisch = tisch;
 	}
 
 	@Override
