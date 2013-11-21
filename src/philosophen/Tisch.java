@@ -9,23 +9,30 @@ public class Tisch {
 	ArrayList<Gabel> gabeln = new ArrayList<Gabel>();
 
 	public Tisch(Integer stuhlAmount) {
-		Integer gabelAmount = stuhlAmount;
-		
-		for (int i = 0; i < stuhlAmount; i++) {
-			gabeln.add(new Gabel());
-		}
-		
-		for (int i = 0; i < stuhlAmount; i++) {
-			if(i == stuhlAmount - 1){
-				stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(0)));
-			} else {
-			stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(i+1)));
-			}
-		}
+
+		tischDecken(stuhlAmount);
 		LOG.info(this.toString() + " erzeugt");
 	}
 
+	private void tischDecken(Integer stuhlAmount) {
+		Integer gabelAmount = stuhlAmount;
+
+		//Hol die Gabeln
+		for (int i = 0; i < gabelAmount; i++) {
+			gabeln.add(new Gabel());
+		}
+		//Stell die Stühle an den Tisch und leg die Gabeln dazu
+		for (int i = 0; i < stuhlAmount; i++) {
+			if (i == stuhlAmount - 1) {
+				stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(0)));
+			} else {
+				stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(i + 1)));
+			}
+		}
+	}
+
 	public String toString() {
-		return "Tisch mit " + stuehle.size() + " Stühlen und " + gabeln.size() + " Gabeln";
+		return "Tisch mit " + stuehle.size() + " Stühlen und " + gabeln.size()
+				+ " Gabeln";
 	}
 }
