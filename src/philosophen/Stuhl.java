@@ -40,6 +40,19 @@ public class Stuhl {
 			LOG.severe(philosoph.toString() + " sitzt hier nicht!");
 		}
 	}
+	
+	public Gabel nimmLinkeGabel() throws GabelNichtVerfügbarException {
+		return nimmGabel(linkeGabel);
+	}
+	
+	public Gabel nimmRechteGabel() throws GabelNichtVerfügbarException {
+		return nimmGabel(rechteGabel);
+	}
+	
+	private Gabel nimmGabel(Gabel gabel) throws GabelNichtVerfügbarException {
+		gabel.nimmInDieHand(sitzenderPhilosoph);
+		return gabel;
+	}
 
 	public boolean istBesetzt() {
 		if (sitzenderPhilosoph != null) {
