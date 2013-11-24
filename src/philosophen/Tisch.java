@@ -15,7 +15,7 @@ public class Tisch {
 		LOG.info(this.toString() + " erzeugt");
 	}
 
-	public Stuhl sucheStuhl(Philosoph philosoph) {
+	public synchronized Stuhl sucheStuhl(Philosoph philosoph) {
 		Stuhl besterStuhl = kellner.findeSitzplatz();
 		besterStuhl.hinsetzen(philosoph);
 		return besterStuhl;

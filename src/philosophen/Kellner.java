@@ -20,7 +20,6 @@ public class Kellner {
 		} else {
 			besterStuhl = findeEinzelnenFreienStuhl();
 		}
-		
 		return besterStuhl;
 	}
 

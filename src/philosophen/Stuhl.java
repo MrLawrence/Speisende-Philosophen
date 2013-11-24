@@ -28,29 +28,41 @@ public class Stuhl {
 					+ sitzenderPhilosoph.toString() + "sitzt dort schon!");
 		}
 		return this;
-
 	}
-	
+
 	public void aufstehen(Philosoph philosoph) {
-		//TODO gabeln ablegen
 		if (sitzenderPhilosoph == philosoph) {
 			sitzenderPhilosoph = null;
-			LOG.info(philosoph.toString() + " von " + this.toString() + " aufgestanden");
+			LOG.finer(philosoph.toString() + " von " + this.toString()
+					+ " aufgestanden");
 		} else {
 			LOG.severe(philosoph.toString() + " sitzt hier nicht!");
 		}
+
 	}
-	
-	public Gabel nimmLinkeGabel() throws GabelNichtVerfügbarException {
+
+	public Boolean istLinkeGabelFrei() {
+		return linkeGabel.istFrei();
+	}
+
+	public Boolean istRechteGabelFrei() {
+		return rechteGabel.istFrei();
+	}
+
+	public Gabel nimmLinkeGabel() {
 		return nimmGabel(linkeGabel);
 	}
-	
-	public Gabel nimmRechteGabel() throws GabelNichtVerfügbarException {
+
+	public Gabel nimmRechteGabel() {
 		return nimmGabel(rechteGabel);
 	}
-	
-	private Gabel nimmGabel(Gabel gabel) throws GabelNichtVerfügbarException {
-		gabel.nimmInDieHand(sitzenderPhilosoph);
+
+	private Gabel nimmGabel(Gabel gabel) {
+		try {
+			gabel.nimmInDieHand(sitzenderPhilosoph);
+		} catch (GabelNichtVerfügbarException e) {
+			LOG.severe("Gabel nicht verfügbar!");
+		}
 		return gabel;
 	}
 

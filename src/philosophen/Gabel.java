@@ -7,32 +7,34 @@ public class Gabel {
 	private final static Logger LOG = Logger.getLogger(Gabel.class.getName());
 	private static AtomicInteger nextId = new AtomicInteger();
 	private Integer id;
-	
-	private Philosoph haltenderPhilosoph = null;
+
+	private Philosoph besitzenderPhilosoph = null;
 
 	public Gabel() {
 		this.id = nextId.incrementAndGet();
 		LOG.fine(this.toString() + " erzeugt");
 	}
-	
-	public void nimmInDieHand(Philosoph philosoph) throws GabelNichtVerfügbarException {
-		if(isTaken()) {
-			throw new GabelNichtVerfügbarException("Gabel gehört bereits" + haltenderPhilosoph);
+
+	public void nimmInDieHand(Philosoph philosoph)
+			throws GabelNichtVerfügbarException {
+		if (!istFrei()) {
+			throw new GabelNichtVerfügbarException("Gabel gehört bereits"
+					+ besitzenderPhilosoph);
 		} else {
-			haltenderPhilosoph = philosoph;
+			besitzenderPhilosoph = philosoph;
 		}
 	}
-	
-	public void legWiederHin() {
-		haltenderPhilosoph = null;
+
+	public void legAb() {
+		besitzenderPhilosoph = null;
 	}
-	
-	public Boolean isTaken() {
-		if (haltenderPhilosoph != null) {
-			return true;
-		} else {
-			return false;
-		}
+
+	public Boolean istBesitzer(Philosoph philosoph) {
+		return besitzenderPhilosoph == philosoph;
+	}
+
+	public Boolean istFrei() {
+		return besitzenderPhilosoph == null;
 	}
 
 	public String toString() {
