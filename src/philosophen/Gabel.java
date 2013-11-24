@@ -1,5 +1,6 @@
 package philosophen;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -17,7 +18,7 @@ public class Gabel {
 
 	public void nimmInDieHand(Philosoph philosoph)
 			throws GabelNichtVerfügbarException {
-		if (!istFrei()) {
+		if (!istFrei().get()) {
 			throw new GabelNichtVerfügbarException("Gabel gehört bereits"
 					+ besitzenderPhilosoph);
 		} else {
@@ -33,12 +34,12 @@ public class Gabel {
 		}
 	}
 
-	public Boolean istBesitzer(Philosoph philosoph) {
-		return besitzenderPhilosoph == philosoph;
+	public AtomicBoolean istBesitzer(Philosoph philosoph) {
+		return new AtomicBoolean(besitzenderPhilosoph == philosoph);
 	}
 
-	public Boolean istFrei() {
-		return besitzenderPhilosoph == null;
+	public AtomicBoolean istFrei() {
+		return new AtomicBoolean(besitzenderPhilosoph == null);
 	}
 
 	public String toString() {

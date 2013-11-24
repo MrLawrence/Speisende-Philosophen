@@ -42,11 +42,11 @@ public class Stuhl {
 	}
 
 	public Boolean istLinkeGabelFrei() {
-		return linkeGabel.istFrei();
+		return linkeGabel.istFrei().get();
 	}
 
 	public Boolean istRechteGabelFrei() {
-		return rechteGabel.istFrei();
+		return rechteGabel.istFrei().get();
 	}
 
 	public Gabel nimmLinkeGabel() {

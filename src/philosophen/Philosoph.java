@@ -1,7 +1,6 @@
 package philosophen;
 
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -46,31 +45,31 @@ public class Philosoph implements Runnable {
 
 	private void essen(Stuhl stuhl) {
 		LOG.fine(this.toString() + " versucht zu essen");
-		AtomicBoolean hatLinkeGabel = new AtomicBoolean(false);
-		while (!hatLinkeGabel.get()) {
+		Boolean hatLinkeGabel = false;
+		while (!hatLinkeGabel) {
 			if (stuhl.istLinkeGabelFrei()) {
 				linkeGabel = stuhl.nimmLinkeGabel();
-				hatLinkeGabel.set(true);
+				hatLinkeGabel = true;
 				LOG.info(this.toString() + " hat linke "
 						+ linkeGabel.toString());
 			}
 		}
 
-		AtomicBoolean hatRechteGabel = new AtomicBoolean(false);
-		AtomicBoolean warteFuerImmer = new AtomicBoolean(true);
+		Boolean hatRechteGabel = false;
+		Boolean warteFuerImmer = true;
 		Integer tries = 0;
 		final Integer MAX_TRIES = 6;
-		while (!hatRechteGabel.get() && warteFuerImmer.get()) {
+		while (!hatRechteGabel && warteFuerImmer) {
 			if (stuhl.istRechteGabelFrei()) {
 				rechteGabel = stuhl.nimmRechteGabel();
-				hatRechteGabel.set(true);
+				hatRechteGabel = true;
 				LOG.info(this.toString() + " isst mit " + linkeGabel.toString()
 						+ " und " + rechteGabel.toString());
 			} else if (tries.equals(MAX_TRIES)) {
 				LOG.info(this.toString() + " opfert seine Gabel");
 				linkeGabel.legAb(this);
 				linkeGabel = null;
-				warteFuerImmer.set(false);
+				warteFuerImmer = false;
 				essen(stuhl);		
 			}
 			tries += tries;
