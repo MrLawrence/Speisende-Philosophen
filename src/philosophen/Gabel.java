@@ -25,8 +25,12 @@ public class Gabel {
 		}
 	}
 
-	public void legAb() {
-		besitzenderPhilosoph = null;
+	public void legAb(Philosoph philosoph) {
+		if (besitzenderPhilosoph == philosoph) {
+			besitzenderPhilosoph = null;
+		} else {
+			LOG.severe(this.toString() + " gehört " + philosoph.toString() + " nicht!");
+		}
 	}
 
 	public Boolean istBesitzer(Philosoph philosoph) {

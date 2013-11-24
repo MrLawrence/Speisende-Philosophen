@@ -11,7 +11,6 @@ public class Philosoph implements Runnable {
 	private static AtomicInteger nextId = new AtomicInteger();
 	private Integer id;
 
-	private AtomicBoolean isHungry = new AtomicBoolean(false);
 	private Tisch tisch;
 	private Gabel linkeGabel;
 	private Gabel rechteGabel;
@@ -28,10 +27,18 @@ public class Philosoph implements Runnable {
 		while (true) {
 			denken();
 			Stuhl stuhl = tisch.sucheStuhl(this);
+			LOG.info(this.toString() + " hat sich auf " + stuhl.toString()
+					+ " gesetzt");
 			essen(stuhl);
+			try {
+				Thread.currentThread().sleep(randomGen.nextInt(10));
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			stuhl.aufstehen(this);
-			linkeGabel.legAb();
-			rechteGabel.legAb();
+			linkeGabel.legAb(this);
+			rechteGabel.legAb(this);
 			linkeGabel = null;
 			rechteGabel = null;
 		}
@@ -39,31 +46,32 @@ public class Philosoph implements Runnable {
 
 	private void essen(Stuhl stuhl) {
 		LOG.fine(this.toString() + " versucht zu essen");
-		Boolean hatLinkeGabel = false;
-		while (!hatLinkeGabel) {
+		AtomicBoolean hatLinkeGabel = new AtomicBoolean(false);
+		while (!hatLinkeGabel.get()) {
 			if (stuhl.istLinkeGabelFrei()) {
 				linkeGabel = stuhl.nimmLinkeGabel();
-				hatLinkeGabel = true;
+				hatLinkeGabel.set(true);
 				LOG.info(this.toString() + " hat linke "
 						+ linkeGabel.toString());
 			}
 		}
 
-		Boolean hatRechteGabel = false;
-		Boolean warteFuerImmer = true;
+		AtomicBoolean hatRechteGabel = new AtomicBoolean(false);
+		AtomicBoolean warteFuerImmer = new AtomicBoolean(true);
 		Integer tries = 0;
-		final Integer MAX_TRIES = 20;
-		while (!hatRechteGabel && warteFuerImmer) {
+		final Integer MAX_TRIES = 6;
+		while (!hatRechteGabel.get() && warteFuerImmer.get()) {
 			if (stuhl.istRechteGabelFrei()) {
 				rechteGabel = stuhl.nimmRechteGabel();
-				hatRechteGabel = true;
-				LOG.info(this.toString() + " isst!");
+				hatRechteGabel.set(true);
+				LOG.info(this.toString() + " isst mit " + linkeGabel.toString()
+						+ " und " + rechteGabel.toString());
 			} else if (tries.equals(MAX_TRIES)) {
 				LOG.info(this.toString() + " opfert seine Gabel");
-				linkeGabel.legAb();
+				linkeGabel.legAb(this);
 				linkeGabel = null;
-				warteFuerImmer = false;
-				essen(stuhl);
+				warteFuerImmer.set(false);
+				essen(stuhl);		
 			}
 			tries += tries;
 		}
@@ -73,7 +81,7 @@ public class Philosoph implements Runnable {
 	private void denken() {
 		LOG.fine(this.toString() + " beginnt denken");
 		try {
-			Thread.currentThread().sleep(randomGen.nextInt(1000));
+			Thread.currentThread().sleep(randomGen.nextInt(100));
 		} catch (InterruptedException e) {
 			LOG.severe(this.toString() + " konnte nicht denken");
 		}

@@ -12,6 +12,8 @@ public class Kellner {
 	}
 
 	public Stuhl findeSitzplatz() {
+		
+
 		Stuhl besterStuhl = null;
 
 		Stuhl dreifacherStuhl = findeDreiFreieStuehle();
@@ -23,6 +25,7 @@ public class Kellner {
 				besterStuhl = zweifacherStuhl;
 			} else {
 				besterStuhl = findeEinzelnenFreienStuhl();
+
 			}
 		}		
 		
@@ -56,11 +59,10 @@ public class Kellner {
 				break;
 			}
 		}
-
 		return gefundenerStuhl;
+
 	}
 
-	// finde Stuhl mit zwei leeren Nachbarstühlen
 	private Stuhl findeDreiFreieStuehle() {
 		Stuhl gefundenerStuhl = null;
 		for (int i = 0; i < stuehle.size(); i++) {

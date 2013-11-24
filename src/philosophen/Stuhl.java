@@ -75,7 +75,6 @@ public class Stuhl {
 	}
 
 	public String toString() {
-		return "Stuhl #" + this.id + " mit " + linkeGabel.toString() + " und "
-				+ rechteGabel.toString();
+		return "Stuhl #" + this.id;
 	}
 }
