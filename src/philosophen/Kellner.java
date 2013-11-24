@@ -13,13 +13,19 @@ public class Kellner {
 
 	public Stuhl findeSitzplatz() {
 		Stuhl besterStuhl = null;
-		// TODO finde Stuhl mit einem freien Nebenstuhl
-		Stuhl einsamerStuhl = findeDreiFreieStuehle();
-		if (einsamerStuhl != null) {
-			return einsamerStuhl;
+
+		Stuhl dreifacherStuhl = findeDreiFreieStuehle();
+		if (dreifacherStuhl != null) {
+			besterStuhl =  dreifacherStuhl;
 		} else {
-			besterStuhl = findeEinzelnenFreienStuhl();
-		}
+			Stuhl zweifacherStuhl = findeStuhlMitEinemFreienNachbarn();
+			if(zweifacherStuhl != null) {
+				besterStuhl = zweifacherStuhl;
+			} else {
+				besterStuhl = findeEinzelnenFreienStuhl();
+			}
+		}		
+		
 		return besterStuhl;
 	}
 
@@ -36,23 +42,32 @@ public class Kellner {
 		return gefundenerStuhl;
 	}
 
+	private Stuhl findeStuhlMitEinemFreienNachbarn() {
+		Stuhl gefundenerStuhl = null;
+
+		for (int i = 0; i < stuehle.size(); i++) {
+			Stuhl dieserStuhl = stuehle.get(i);
+			Stuhl linkerStuhl = findeLinkenStuhl(i);
+			Stuhl rechterStuhl = findeRechtenStuhl(i);
+
+			if (!dieserStuhl.istBesetzt()
+					&& (!linkerStuhl.istBesetzt() || !rechterStuhl.istBesetzt())) {
+				gefundenerStuhl = dieserStuhl;
+				break;
+			}
+		}
+
+		return gefundenerStuhl;
+	}
+
 	// finde Stuhl mit zwei leeren Nachbarstühlen
 	private Stuhl findeDreiFreieStuehle() {
 		Stuhl gefundenerStuhl = null;
 		for (int i = 0; i < stuehle.size(); i++) {
 			Stuhl dieserStuhl = stuehle.get(i);
-			Stuhl linkerStuhl;
-			Stuhl rechterStuhl;
-			if (i == 0) {
-				linkerStuhl = stuehle.get(stuehle.size() - 1);
-				rechterStuhl = stuehle.get(1);
-			} else if (i == stuehle.size() - 1) {
-				linkerStuhl = stuehle.get(i - 1);
-				rechterStuhl = stuehle.get(0);
-			} else {
-				linkerStuhl = stuehle.get(i - 1);
-				rechterStuhl = stuehle.get(i + 1);
-			}
+			Stuhl linkerStuhl = findeLinkenStuhl(i);
+			Stuhl rechterStuhl = findeRechtenStuhl(i);
+
 			if (!dieserStuhl.istBesetzt() && !linkerStuhl.istBesetzt()
 					&& !rechterStuhl.istBesetzt()) {
 				gefundenerStuhl = dieserStuhl;
@@ -60,5 +75,27 @@ public class Kellner {
 			}
 		}
 		return gefundenerStuhl;
+	}
+
+	private Stuhl findeLinkenStuhl(Integer i) {
+		Stuhl linkerStuhl;
+
+		if (i == 0) {
+			linkerStuhl = stuehle.get(stuehle.size() - 1);
+		} else {
+			linkerStuhl = stuehle.get(i - 1);
+		}
+		return linkerStuhl;
+	}
+
+	private Stuhl findeRechtenStuhl(Integer i) {
+		Stuhl rechterStuhl;
+
+		if (i == stuehle.size() - 1) {
+			rechterStuhl = stuehle.get(0);
+		} else {
+			rechterStuhl = stuehle.get(i + 1);
+		}
+		return rechterStuhl;
 	}
 }

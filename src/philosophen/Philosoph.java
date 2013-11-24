@@ -71,7 +71,7 @@ public class Philosoph implements Runnable {
 	}
 
 	private void denken() {
-		LOG.info(this.toString() + " beginnt denken");
+		LOG.fine(this.toString() + " beginnt denken");
 		try {
 			Thread.currentThread().sleep(randomGen.nextInt(1000));
 		} catch (InterruptedException e) {

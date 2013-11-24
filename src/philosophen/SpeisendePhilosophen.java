@@ -10,6 +10,8 @@ public class SpeisendePhilosophen {
 	public static void main(String[] args) {
 		Integer anzahlPhilosophen = 5;
 		Integer anzahlStuehle = 5;
+		LOG.info("Zu generierende Philosophen: " + anzahlPhilosophen);
+		LOG.info("Zu generierende Stuehle: " + anzahlStuehle);
 		Tisch tisch = new Tisch(anzahlStuehle);
 
 		ArrayList<Thread> philosophen = new ArrayList<Thread>();
