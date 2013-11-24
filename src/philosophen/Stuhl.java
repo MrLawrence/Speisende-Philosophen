@@ -20,7 +20,7 @@ public class Stuhl {
 	}
 
 	public Stuhl hinsetzen(Philosoph philosoph) {
-		if (!this.istBesetzt()) {
+		if (this.istFrei()) {
 			this.sitzenderPhilosoph = philosoph;
 		} else {
 			LOG.severe(philosoph.toString() + "versuchte sich auf "
@@ -66,14 +66,11 @@ public class Stuhl {
 		return gabel;
 	}
 
-	public boolean istBesetzt() {
-		if (sitzenderPhilosoph != null) {
-			return true;
-		} else {
-			return false;
-		}
+	public boolean istFrei() {
+		return sitzenderPhilosoph == null;
 	}
-
+	
+	@Override
 	public String toString() {
 		return "Stuhl #" + this.id;
 	}

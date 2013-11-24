@@ -41,7 +41,8 @@ public class Gabel {
 	public AtomicBoolean istFrei() {
 		return new AtomicBoolean(besitzenderPhilosoph == null);
 	}
-
+	
+	@Override
 	public String toString() {
 		return "Gabel #" + id;
 	}

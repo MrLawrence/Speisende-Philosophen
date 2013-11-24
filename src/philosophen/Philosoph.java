@@ -14,6 +14,7 @@ public class Philosoph implements Runnable {
 	private Gabel linkeGabel;
 	private Gabel rechteGabel;
 	private Random randomGen = new Random();
+	private Integer essVorgaenge = 0;
 
 	public Philosoph(Tisch tisch) {
 		this.id = nextId.incrementAndGet();
@@ -24,22 +25,18 @@ public class Philosoph implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			denken();
+			
 			Stuhl stuhl = tisch.sucheStuhl(this);
 			LOG.info(this.toString() + " hat sich auf " + stuhl.toString()
 					+ " gesetzt");
 			essen(stuhl);
-			try {
-				Thread.currentThread().sleep(randomGen.nextInt(10));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 			stuhl.aufstehen(this);
 			linkeGabel.legAb(this);
 			rechteGabel.legAb(this);
 			linkeGabel = null;
 			rechteGabel = null;
+			denken();
 		}
 	}
 
@@ -50,7 +47,7 @@ public class Philosoph implements Runnable {
 			if (stuhl.istLinkeGabelFrei()) {
 				linkeGabel = stuhl.nimmLinkeGabel();
 				hatLinkeGabel = true;
-				LOG.info(this.toString() + " hat linke "
+				LOG.fine(this.toString() + " hat linke "
 						+ linkeGabel.toString());
 			}
 		}
@@ -58,7 +55,7 @@ public class Philosoph implements Runnable {
 		Boolean hatRechteGabel = false;
 		Boolean warteFuerImmer = true;
 		Integer tries = 0;
-		final Integer MAX_TRIES = 6;
+		Integer MAX_TRIES = 10;
 		while (!hatRechteGabel && warteFuerImmer) {
 			if (stuhl.istRechteGabelFrei()) {
 				rechteGabel = stuhl.nimmRechteGabel();
@@ -70,22 +67,28 @@ public class Philosoph implements Runnable {
 				linkeGabel.legAb(this);
 				linkeGabel = null;
 				warteFuerImmer = false;
-				essen(stuhl);		
+				essen(stuhl);
 			}
-			tries += tries;
+			tries += 1;
 		}
 
 	}
 
 	private void denken() {
-		LOG.fine(this.toString() + " beginnt denken");
-		try {
-			Thread.currentThread().sleep(randomGen.nextInt(100));
-		} catch (InterruptedException e) {
-			LOG.severe(this.toString() + " konnte nicht denken");
+		essVorgaenge += 1;
+		LOG.fine(this.toString() + " beginnt denken nach " + essVorgaenge + " Essen");
+		if (essVorgaenge.equals(3)) {
+			try {
+				Thread.currentThread().sleep(randomGen.nextInt(100));
+				LOG.info(this.toString() + " schläft");
+				essVorgaenge = 0;
+			} catch (InterruptedException e) {
+				LOG.severe(this.toString() + " konnte nicht schlafen");
+			}
 		}
 	}
 
+	@Override
 	public String toString() {
 		return "Philosoph #" + id;
 	}
