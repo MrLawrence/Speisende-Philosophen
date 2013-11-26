@@ -67,6 +67,12 @@ public class Philosoph implements Runnable {
 				linkeGabel.legAb(this);
 				linkeGabel = null;
 				warteFuerImmer = false;
+				try {
+					Thread.currentThread().sleep(randomGen.nextInt(5));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
 				essen(stuhl);
 			}
 			tries += 1;
