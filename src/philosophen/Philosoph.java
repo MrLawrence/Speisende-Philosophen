@@ -15,10 +15,12 @@ public class Philosoph implements Runnable {
 	private Gabel rechteGabel;
 	private Random randomGen = new Random();
 	private Integer essVorgaenge = 0;
+	private Boolean istHungrig;
 
-	public Philosoph(Tisch tisch) {
+	public Philosoph(Tisch tisch, Boolean istHungrig) {
 		this.id = nextId.incrementAndGet();
 		LOG.info(this.toString() + " erzeugt");
+		this.istHungrig = istHungrig;
 		this.tisch = tisch;
 	}
 
@@ -68,7 +70,7 @@ public class Philosoph implements Runnable {
 				linkeGabel = null;
 				warteFuerImmer = false;
 				try {
-					Thread.currentThread().sleep(randomGen.nextInt(5));
+					Thread.currentThread().sleep(randomGen.nextInt(10));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
