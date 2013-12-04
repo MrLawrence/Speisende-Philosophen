@@ -17,17 +17,23 @@ public class SpeisendePhilosophen {
 		LOG.info("Zu generierende Stuehle: " + anzahlStuehle);
 		Tisch tisch = new Tisch(anzahlStuehle);
 
-		ArrayList<Thread> philosophen = new ArrayList<Thread>();
+		ArrayList<Philosoph> philosophen = new ArrayList<Philosoph>();
+
+		ArrayList<Thread> philosophenThreads = new ArrayList<Thread>();
 		for (int i = 0; i < anzahlPhilosophen; i++) {
-			philosophen.add(new Thread(new Philosoph(tisch, false)));
+			Philosoph philosoph = new Philosoph(tisch, false);
+			philosophenThreads.add(new Thread(philosoph));
+			philosophen.add(philosoph);
 		}
 
 		for (int i = 0; i < anzahlHungrigePhilosophen; i++) {
-			philosophen.add(new Thread(new Philosoph(tisch, true)));
+			Philosoph philosoph = new Philosoph(tisch, true);
+			philosophenThreads.add(new Thread(philosoph));
+			philosophen.add(philosoph);
 		}
-
-		
-		for (Thread t : philosophen) {
+		Thread aufseherThread = new Thread(new Tischaufseher(philosophen));
+		aufseherThread.start();
+		for (Thread t : philosophenThreads) {
 			t.start();
 		}
 	}

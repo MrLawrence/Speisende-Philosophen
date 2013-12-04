@@ -1,0 +1,44 @@
+package philosophen;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import philosophen.tisch.Stuhl;
+
+public class Tischaufseher implements Runnable {
+	private final static Logger LOG = Logger.getLogger(Tischaufseher.class
+			.getName());
+
+	ArrayList<Philosoph> philosophen = new ArrayList<Philosoph>();
+	private Integer abweichung = 4;
+	public Tischaufseher(ArrayList<Philosoph> philosophen) {
+		this.philosophen = philosophen;
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			try {
+				Thread.currentThread().sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Integer summe = 0;
+			for (Philosoph p : philosophen) {
+				summe += p.getAlleEssvorgaenge();
+			}
+			Integer durchschnitt = summe / philosophen.size();
+
+			for (Philosoph p : philosophen) {
+				if (durchschnitt + abweichung < p.getAlleEssvorgaenge()) {
+					p.sperreFuer(100);
+					LOG.info("Sperre kurzzeitig " + p.toString());
+				}
+			}
+		}
+	}
+}

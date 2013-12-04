@@ -19,16 +19,18 @@ public class Philosoph implements Runnable {
 	private Gabel rechteGabel;
 	private Random randomGen = new Random();
 	private Integer essvorgaenge = 0;
-	private Boolean istHungrig;
-	private Integer denkzeit = 100;
+	private Integer essvorgaengeVorSchlaf = 0;
+	private Integer denkzeit = 10;
+	private Integer schlafzeit = 100;
+	private Integer esszeit = 2;
+	private Integer sperrzeit = 0;
 	private Integer maxEssvorgaenge = 3;
 
 	public Philosoph(Tisch tisch, Boolean istHungrig) {
 		this.id = nextId.incrementAndGet();
 		LOG.info(this.toString() + " erzeugt");
-		this.istHungrig = istHungrig;
 		if (istHungrig) {
-			denkzeit /= 2;
+			schlafzeit /= 2;
 		}
 		this.tisch = tisch;
 	}
@@ -54,7 +56,7 @@ public class Philosoph implements Runnable {
 	private void versucheZuEssen(Stuhl stuhl) {
 		LOG.fine(this.toString() + " versucht zu essen");
 		nimmLinkeGabel(stuhl);
-		
+
 		Boolean hatRechteGabel = false;
 		Boolean warteFuerImmer = true;
 		Integer tries = 0;
@@ -65,16 +67,18 @@ public class Philosoph implements Runnable {
 				hatRechteGabel = true;
 				LOG.info(this.toString() + " isst mit " + linkeGabel.toString()
 						+ " und " + rechteGabel.toString());
+				try {
+					Thread.currentThread().sleep(esszeit);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			} else if (tries.equals(MAX_TRIES)) {
 				LOG.info(this.toString() + " opfert seine Gabel");
 				linkeGabel.legAb(this);
 				linkeGabel = null;
 				warteFuerImmer = false;
-				try {
-					Thread.currentThread().sleep(randomGen.nextInt(10));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 
 				versucheZuEssen(stuhl);
 			}
@@ -97,19 +101,42 @@ public class Philosoph implements Runnable {
 
 	private void denken() {
 		essvorgaenge += 1;
-		LOG.fine(this.toString() + " beginnt denken nach " + essvorgaenge
-				+ " Essen");
-		if (essvorgaenge.equals(maxEssvorgaenge)) {
+		essvorgaengeVorSchlaf += 1;
+		LOG.fine(this.toString() + " beginnt denken nach "
+				+ essvorgaengeVorSchlaf + " Essen");
+		try {
+			Thread.currentThread().sleep(sperrzeit);
+		} catch (InterruptedException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		sperrzeit = 0;
+		
+		try {
+			Thread.currentThread().sleep(randomGen.nextInt(denkzeit));
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		if (essvorgaengeVorSchlaf.equals(maxEssvorgaenge)) {
 			try {
-				Thread.currentThread().sleep(randomGen.nextInt(denkzeit));
+				Thread.currentThread().sleep(randomGen.nextInt(schlafzeit));
 				LOG.info(this.toString() + " schläft");
-				essvorgaenge = 0;
+				essvorgaengeVorSchlaf = 0;
 			} catch (InterruptedException e) {
 				LOG.severe(this.toString() + " konnte nicht schlafen");
 			}
 		}
 	}
 
+	public Integer getAlleEssvorgaenge() {
+		return essvorgaenge;
+	}
+
+	public void sperreFuer(Integer sperrzeit) {
+		this.sperrzeit = sperrzeit;
+	}
 	@Override
 	public String toString() {
 		return "Philosoph #" + id;
