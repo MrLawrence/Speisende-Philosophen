@@ -1,7 +1,9 @@
-package philosophen;
+package philosophen.tisch;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+import philosophen.Philosoph;
 
 public class Stuhl {
 	private final static Logger LOG = Logger.getLogger(Stuhl.class.getName());
@@ -60,7 +62,7 @@ public class Stuhl {
 	private Gabel nimmGabel(Gabel gabel) {
 		try {
 			gabel.nimmInDieHand(sitzenderPhilosoph);
-		} catch (GabelNichtVerfügbarException e) {
+		} catch (GabelException e) {
 			LOG.severe("Gabel nicht verfügbar!");
 		}
 		return gabel;

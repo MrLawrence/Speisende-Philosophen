@@ -4,6 +4,10 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import philosophen.tisch.Gabel;
+import philosophen.tisch.Stuhl;
+import philosophen.tisch.Tisch;
+
 public class Philosoph implements Runnable {
 	private final static Logger LOG = Logger.getLogger(Philosoph.class
 			.getName());
@@ -14,24 +18,29 @@ public class Philosoph implements Runnable {
 	private Gabel linkeGabel;
 	private Gabel rechteGabel;
 	private Random randomGen = new Random();
-	private Integer essVorgaenge = 0;
+	private Integer essvorgaenge = 0;
 	private Boolean istHungrig;
+	private Integer denkzeit = 100;
+	private Integer maxEssvorgaenge = 3;
 
 	public Philosoph(Tisch tisch, Boolean istHungrig) {
 		this.id = nextId.incrementAndGet();
 		LOG.info(this.toString() + " erzeugt");
 		this.istHungrig = istHungrig;
+		if (istHungrig) {
+			denkzeit /= 2;
+		}
 		this.tisch = tisch;
 	}
 
 	@Override
 	public void run() {
 		while (true) {
-			
+
 			Stuhl stuhl = tisch.sucheStuhl(this);
 			LOG.info(this.toString() + " hat sich auf " + stuhl.toString()
 					+ " gesetzt");
-			essen(stuhl);
+			versucheZuEssen(stuhl);
 
 			stuhl.aufstehen(this);
 			linkeGabel.legAb(this);
@@ -42,18 +51,10 @@ public class Philosoph implements Runnable {
 		}
 	}
 
-	private void essen(Stuhl stuhl) {
+	private void versucheZuEssen(Stuhl stuhl) {
 		LOG.fine(this.toString() + " versucht zu essen");
-		Boolean hatLinkeGabel = false;
-		while (!hatLinkeGabel) {
-			if (stuhl.istLinkeGabelFrei()) {
-				linkeGabel = stuhl.nimmLinkeGabel();
-				hatLinkeGabel = true;
-				LOG.fine(this.toString() + " hat linke "
-						+ linkeGabel.toString());
-			}
-		}
-
+		nimmLinkeGabel(stuhl);
+		
 		Boolean hatRechteGabel = false;
 		Boolean warteFuerImmer = true;
 		Integer tries = 0;
@@ -75,21 +76,34 @@ public class Philosoph implements Runnable {
 					e.printStackTrace();
 				}
 
-				essen(stuhl);
+				versucheZuEssen(stuhl);
 			}
 			tries += 1;
 		}
 
 	}
 
+	private void nimmLinkeGabel(Stuhl stuhl) {
+		Boolean hatLinkeGabel = false;
+		while (!hatLinkeGabel) {
+			if (stuhl.istLinkeGabelFrei()) {
+				linkeGabel = stuhl.nimmLinkeGabel();
+				hatLinkeGabel = true;
+				LOG.fine(this.toString() + " hat linke "
+						+ linkeGabel.toString());
+			}
+		}
+	}
+
 	private void denken() {
-		essVorgaenge += 1;
-		LOG.fine(this.toString() + " beginnt denken nach " + essVorgaenge + " Essen");
-		if (essVorgaenge.equals(3)) {
+		essvorgaenge += 1;
+		LOG.fine(this.toString() + " beginnt denken nach " + essvorgaenge
+				+ " Essen");
+		if (essvorgaenge.equals(maxEssvorgaenge)) {
 			try {
-				Thread.currentThread().sleep(randomGen.nextInt(100));
+				Thread.currentThread().sleep(randomGen.nextInt(denkzeit));
 				LOG.info(this.toString() + " schläft");
-				essVorgaenge = 0;
+				essvorgaenge = 0;
 			} catch (InterruptedException e) {
 				LOG.severe(this.toString() + " konnte nicht schlafen");
 			}

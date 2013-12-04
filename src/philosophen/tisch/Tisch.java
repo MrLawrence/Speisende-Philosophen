@@ -1,7 +1,9 @@
-package philosophen;
+package philosophen.tisch;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import philosophen.Philosoph;
 
 public class Tisch {
 	private final static Logger LOG = Logger.getLogger(Tisch.class.getName());

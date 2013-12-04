@@ -1,8 +1,10 @@
-package philosophen;
+package philosophen.tisch;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
+
+import philosophen.Philosoph;
 
 public class Gabel {
 	private final static Logger LOG = Logger.getLogger(Gabel.class.getName());
@@ -17,9 +19,9 @@ public class Gabel {
 	}
 
 	public void nimmInDieHand(Philosoph philosoph)
-			throws GabelNichtVerfügbarException {
+			throws GabelException {
 		if (!istFrei().get()) {
-			throw new GabelNichtVerfügbarException("Gabel gehört bereits"
+			throw new GabelException("Gabel gehört bereits"
 					+ besitzenderPhilosoph);
 		} else {
 			besitzenderPhilosoph = philosoph;
