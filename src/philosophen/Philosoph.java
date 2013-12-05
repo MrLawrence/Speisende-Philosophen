@@ -1,6 +1,5 @@
 package philosophen;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 

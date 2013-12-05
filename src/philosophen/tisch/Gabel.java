@@ -15,7 +15,7 @@ public class Gabel {
 
 	public Gabel() {
 		this.id = nextId.incrementAndGet();
-		LOG.fine(this.toString() + " erzeugt");
+		LOG.fine("Gabel #" + id + " erzeugt");
 	}
 
 	public void nimmInDieHand(Philosoph philosoph)

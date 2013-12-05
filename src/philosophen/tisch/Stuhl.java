@@ -18,7 +18,7 @@ public class Stuhl {
 		this.id = nextId.incrementAndGet();
 		this.linkeGabel = linkeGabel;
 		this.rechteGabel = rechteGabel;
-		LOG.info(this.toString() + " erzeugt");
+		LOG.info("Stuhl #" + this.id + " erzeugt");
 	}
 
 	public Stuhl hinsetzen(Philosoph philosoph) {

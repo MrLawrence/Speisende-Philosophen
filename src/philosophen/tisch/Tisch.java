@@ -14,7 +14,6 @@ public class Tisch {
 
 	public Tisch(Integer stuhlAmount) {
 		tischDecken(stuhlAmount);
-		LOG.info(this.toString() + " erzeugt");
 	}
 
 	public synchronized Stuhl findeStuhl(Philosoph philosoph) {
