@@ -9,6 +9,7 @@ import philosophen.Philosoph;
 public class Gabel {
 	private final static Logger LOG = Logger.getLogger(Gabel.class.getName());
 	private static AtomicInteger nextId = new AtomicInteger();
+
 	private Integer id;
 
 	private Philosoph besitzenderPhilosoph = null;
