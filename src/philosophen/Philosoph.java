@@ -19,6 +19,7 @@ public class Philosoph implements Runnable {
 	private Gabel rechteGabel;
 
 	private Integer essvorgaenge = 0;
+	private Integer opferungen = 0;
 	private Integer essvorgaengeVorSchlaf = 0;
 	private Integer denkzeit = 10;
 	private Integer schlafzeit = 100;
@@ -40,7 +41,7 @@ public class Philosoph implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
-			Stuhl stuhl = tisch.sucheStuhl(this);
+			Stuhl stuhl = tisch.findeStuhl(this);
 			LOG.info(this.toString() + " hat sich auf " + stuhl.toString()
 					+ " gesetzt");
 			versucheZuEssen(stuhl);
@@ -76,11 +77,8 @@ public class Philosoph implements Runnable {
 				}
 
 			} else if (tries.equals(MAX_TRIES)) {
-				LOG.info(this.toString() + " opfert seine Gabel");
-				linkeGabel.legAb(this);
-				linkeGabel = null;
+				opferGabel();
 				warteFuerImmer = false;
-
 				versucheZuEssen(stuhl);
 			}
 			tries += 1;
@@ -137,6 +135,18 @@ public class Philosoph implements Runnable {
 			e.printStackTrace();
 		}
 		sperrzeit.set(0);
+	}
+
+	private void opferGabel() {
+		LOG.info(this.toString() + " opfert seine Gabel");
+		linkeGabel.legAb(this);
+		linkeGabel = null;
+		opferungen += 1;
+	}
+
+	public void printStats() {
+		System.out.println(this.toString() + ": " + essvorgaenge
+				+ " Essen und " + opferungen + " Opferungen");
 	}
 
 	@Override

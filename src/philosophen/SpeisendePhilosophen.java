@@ -45,7 +45,7 @@ public class SpeisendePhilosophen {
         }
         
 		for (Philosoph p : philosophen) {
-			System.out.println(p.toString() + ": " + p.getAlleEssvorgaenge() + " Essen");
+			p.printStats();
 		}
 		
 		for (Thread t : philosophenThreads) {

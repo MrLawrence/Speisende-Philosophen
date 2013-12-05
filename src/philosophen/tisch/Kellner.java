@@ -12,8 +12,6 @@ public class Kellner {
 	}
 
 	public Stuhl findeSitzplatz() {
-		
-
 		Stuhl besterStuhl = null;
 
 		Stuhl dreifacherStuhl = findeDreiFreieStuehle();
