@@ -13,6 +13,7 @@ public class SpeisendePhilosophen {
 		Integer anzahlPhilosophen = 5;
 		Integer anzahlHungrigePhilosophen = 2;
 		Integer anzahlStuehle = 5;
+		Integer gesamtlaufzeit = 60; //in s
 		LOG.info("Zu generierende Philosophen: " + anzahlPhilosophen);
 		LOG.info("Zu generierende Stuehle: " + anzahlStuehle);
 		Tisch tisch = new Tisch(anzahlStuehle);
@@ -36,5 +37,20 @@ public class SpeisendePhilosophen {
 		for (Thread t : philosophenThreads) {
 			t.start();
 		}
+		
+        try {
+            Thread.sleep(1000 * gesamtlaufzeit);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+		for (Philosoph p : philosophen) {
+			System.out.println(p.toString() + ": " + p.getAlleEssvorgaenge() + " Essen");
+		}
+		
+		for (Thread t : philosophenThreads) {
+			t.stop();
+		}
+		aufseherThread.stop();
 	}
 }

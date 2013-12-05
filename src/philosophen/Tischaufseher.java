@@ -1,18 +1,16 @@
 package philosophen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-
-import philosophen.tisch.Stuhl;
 
 public class Tischaufseher implements Runnable {
 	private final static Logger LOG = Logger.getLogger(Tischaufseher.class
 			.getName());
 
 	ArrayList<Philosoph> philosophen = new ArrayList<Philosoph>();
-	private Integer abweichung = 4;
+	private Integer abweichung = 10;
+	private AtomicInteger sperrzeit = new AtomicInteger(1000);
 	public Tischaufseher(ArrayList<Philosoph> philosophen) {
 		this.philosophen = philosophen;
 	}
@@ -23,7 +21,6 @@ public class Tischaufseher implements Runnable {
 			try {
 				Thread.currentThread().sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -35,7 +32,7 @@ public class Tischaufseher implements Runnable {
 
 			for (Philosoph p : philosophen) {
 				if (durchschnitt + abweichung < p.getAlleEssvorgaenge()) {
-					p.sperreFuer(100);
+					p.sperreFuer(sperrzeit);
 					LOG.info("Sperre kurzzeitig " + p.toString());
 				}
 			}
