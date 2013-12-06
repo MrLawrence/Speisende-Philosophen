@@ -60,18 +60,14 @@ public class Stuhl {
 	}
 
 	private Gabel nimmGabel(Gabel gabel) {
-		try {
-			gabel.nimmInDieHand(sitzenderPhilosoph);
-		} catch (GabelException e) {
-			LOG.severe("Gabel nicht verfügbar!");
-		}
+		gabel.nimmInDieHand(sitzenderPhilosoph);
 		return gabel;
 	}
 
 	public boolean istFrei() {
 		return sitzenderPhilosoph == null;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Stuhl #" + this.id;
