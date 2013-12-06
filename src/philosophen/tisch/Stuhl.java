@@ -43,12 +43,8 @@ public class Stuhl {
 
 	}
 
-	public Boolean istLinkeGabelFrei() {
-		return linkeGabel.istFrei().get();
-	}
-
-	public Boolean istRechteGabelFrei() {
-		return rechteGabel.istFrei().get();
+	public Boolean istLinkeGabelGroesser() {
+		return linkeGabel.hasBiggerIdThan(rechteGabel);
 	}
 
 	public Gabel nimmLinkeGabel() {
@@ -60,7 +56,7 @@ public class Stuhl {
 	}
 
 	private Gabel nimmGabel(Gabel gabel) {
-		gabel.nimmInDieHand(sitzenderPhilosoph);
+		gabel.nimm(sitzenderPhilosoph);
 		return gabel;
 	}
 

@@ -21,15 +21,18 @@ public class Gabel {
 		LOG.fine("Gabel #" + id + " erzeugt");
 	}
 
-	public void nimmInDieHand(Philosoph philosoph) {
-		if (istFrei().get()) {
-			besitzenderPhilosoph = philosoph;
+	public void nimm(Philosoph philosoph) {
+		try {
+			mutex.acquire();
+		} catch (InterruptedException e) {
+			LOG.info(this.toString() + " wurde abgebrochen");
 		}
+		besitzenderPhilosoph = philosoph;
 	}
 
 	public void legAb(Philosoph philosoph) {
 		if (besitzenderPhilosoph == philosoph) {
-			besitzenderPhilosoph = null;
+			mutex.release();
 		} else {
 			LOG.severe(this.toString() + " gehört " + philosoph.toString()
 					+ " nicht!");
@@ -40,8 +43,13 @@ public class Gabel {
 		return new AtomicBoolean(besitzenderPhilosoph == philosoph);
 	}
 
-	public AtomicBoolean istFrei() {
-		return new AtomicBoolean(besitzenderPhilosoph == null);
+	
+	public Boolean hasBiggerIdThan(Gabel andereGabel) {
+		return andereGabel.isIdBiggerThan(this.id);
+	}
+	
+	public Boolean isIdBiggerThan(Integer otherId) {
+		return this.id > otherId;
 	}
 
 	@Override
