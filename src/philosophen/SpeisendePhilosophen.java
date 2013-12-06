@@ -13,7 +13,7 @@ public class SpeisendePhilosophen {
 		Integer anzahlPhilosophen = 5;
 		Integer anzahlHungrigePhilosophen = 2;
 		Integer anzahlStuehle = 5;
-		Integer gesamtlaufzeit = 60; //in s
+		Integer gesamtlaufzeit = 30; //in s
 		LOG.info("Zu generierende Philosophen: " + anzahlPhilosophen);
 		LOG.info("Zu generierende Stuehle: " + anzahlStuehle);
 		Tisch tisch = new Tisch(anzahlStuehle);

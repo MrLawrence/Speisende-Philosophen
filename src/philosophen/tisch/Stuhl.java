@@ -14,7 +14,7 @@ public class Stuhl {
 	private Gabel rechteGabel;
 	private Philosoph sitzenderPhilosoph;
 
-	public Stuhl(Gabel linkeGabel, Gabel rechteGabel) {
+	public Stuhl(Tisch tisch, Gabel linkeGabel, Gabel rechteGabel) {
 		this.id = nextId.incrementAndGet();
 		this.linkeGabel = linkeGabel;
 		this.rechteGabel = rechteGabel;
@@ -32,15 +32,8 @@ public class Stuhl {
 		return this;
 	}
 
-	public void aufstehen(Philosoph philosoph) {
-		if (sitzenderPhilosoph == philosoph) {
-			sitzenderPhilosoph = null;
-			LOG.finer(philosoph.toString() + " von " + this.toString()
-					+ " aufgestanden");
-		} else {
-			LOG.severe(philosoph.toString() + " sitzt hier nicht!");
-		}
-
+	public void aufstehen() {
+		sitzenderPhilosoph = null;
 	}
 
 	public Boolean istLinkeGabelGroesser() {

@@ -1,22 +1,29 @@
 package philosophen.tisch;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 
 import philosophen.Philosoph;
 
 public class Tisch {
-	private final static Logger LOG = Logger.getLogger(Tisch.class.getName());
 	ArrayList<Stuhl> stuehle = new ArrayList<Stuhl>();
 	ArrayList<Gabel> gabeln = new ArrayList<Gabel>();
-
+	Semaphore semaphore;
 	Kellner kellner = new Kellner(stuehle);
 
 	public Tisch(Integer stuhlAmount) {
+		semaphore = new Semaphore(stuhlAmount, true);
 		tischDecken(stuhlAmount);
 	}
 
 	public synchronized Stuhl findeStuhl(Philosoph philosoph) {
+		try {
+			semaphore.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Stuhl besterStuhl = kellner.findeSitzplatz();
 		besterStuhl.hinsetzen(philosoph);
 		return besterStuhl;
@@ -31,11 +38,16 @@ public class Tisch {
 
 		for (int i = 0; i < stuhlAmount; i++) {
 			if (i == stuhlAmount - 1) {
-				stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(0)));
+				stuehle.add(new Stuhl(this, gabeln.get(i), gabeln.get(0)));
 			} else {
-				stuehle.add(new Stuhl(gabeln.get(i), gabeln.get(i + 1)));
+				stuehle.add(new Stuhl(this, gabeln.get(i), gabeln.get(i + 1)));
 			}
 		}
+	}
+	
+	public void aufstehen(Stuhl stuhl) {
+		semaphore.release();
+		stuhl.aufstehen();
 	}
 
 	@Override

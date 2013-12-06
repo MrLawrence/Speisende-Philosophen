@@ -22,7 +22,7 @@ public class Philosoph implements Runnable {
 	private Integer denkzeit = 10;
 	private Integer schlafzeit = 100;
 	private Integer esszeit = 2;
-	private AtomicInteger sperrzeit = new AtomicInteger(0);
+	private Integer sperrzeit = 0;
 	private Integer maxEssvorgaenge = 3;
 	private Boolean istHungrig;
 
@@ -42,15 +42,13 @@ public class Philosoph implements Runnable {
 			Stuhl stuhl = tisch.findeStuhl(this);
 			LOG.fine(this.toString() + " hat sich auf " + stuhl.toString()
 					+ " gesetzt");
+			sperrzeitAbsitzen();
 			essen(stuhl);
-
 			denken();
 		}
 	}
 
 	private void essen(Stuhl stuhl) {
-		sperrzeitAbsitzen();
-		LOG.fine(this.toString() + " versucht zu essen");
 		nimmGabeln(stuhl);
 		try {
 			LOG.info(this.toString() + " isst auf " + stuhl.toString());
@@ -58,12 +56,12 @@ public class Philosoph implements Runnable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		stuhl.aufstehen(this);
+		tisch.aufstehen(stuhl);
 		legGabelnAb();
 	}
 
 	private void nimmGabeln(Stuhl stuhl) {
-		if (stuhl.istLinkeGabelGroesser()) {
+		if (!stuhl.istLinkeGabelGroesser()) {
 			linkeGabel = stuhl.nimmLinkeGabel();
 			rechteGabel = stuhl.nimmRechteGabel();
 		} else {
@@ -71,7 +69,7 @@ public class Philosoph implements Runnable {
 			linkeGabel = stuhl.nimmLinkeGabel();
 		}
 	}
-	
+
 	private void legGabelnAb() {
 		linkeGabel.legAb(this);
 		rechteGabel.legAb(this);
@@ -106,22 +104,24 @@ public class Philosoph implements Runnable {
 		return essvorgaenge;
 	}
 
-	public void sperreFuer(AtomicInteger sperrzeit) {
+	public void sperreFuer(Integer sperrzeit) {
 		this.sperrzeit = sperrzeit;
 	}
 
 	private void sperrzeitAbsitzen() {
-		try {
-			Thread.sleep(sperrzeit.get());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if (sperrzeit != 0) {
+			try {
+				LOG.info(this.toString() + " gesperrt für " + this.sperrzeit);
+				Thread.sleep(sperrzeit);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			sperrzeit = 0;
 		}
-		sperrzeit.set(0);
 	}
 
 	public void printStats() {
-		System.out.println(this.toString() + ": " + essvorgaenge
-				+ " Essen");
+		System.out.println(this.toString() + ": " + essvorgaenge + " Essen");
 	}
 
 	@Override
