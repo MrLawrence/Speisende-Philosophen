@@ -1,13 +1,11 @@
 package philosophen.tisch;
 
-import java.util.ArrayList;
-import java.util.logging.Logger;
+import java.util.List;
 
 public class Kellner {
-	private final static Logger LOG = Logger.getLogger(Kellner.class.getName());
-	ArrayList<Stuhl> stuehle;
+	List<Stuhl> stuehle;
 
-	public Kellner(ArrayList<Stuhl> stuehle) {
+	public Kellner(List<Stuhl> stuehle) {
 		this.stuehle = stuehle;
 	}
 

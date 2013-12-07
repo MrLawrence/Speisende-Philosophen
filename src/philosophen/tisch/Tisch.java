@@ -1,16 +1,16 @@
 package philosophen.tisch;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Logger;
 
 import philosophen.Philosoph;
 
 public class Tisch {
-	ArrayList<Stuhl> stuehle = new ArrayList<Stuhl>();
-	ArrayList<Gabel> gabeln = new ArrayList<Gabel>();
-	Semaphore semaphore;
-	Kellner kellner = new Kellner(stuehle);
+	private List<Stuhl> stuehle = new ArrayList<Stuhl>();
+	private List<Gabel> gabeln = new ArrayList<Gabel>();
+	private Semaphore semaphore;
+	private Kellner kellner = new Kellner(stuehle);
 
 	public Tisch(Integer stuhlAmount) {
 		semaphore = new Semaphore(stuhlAmount, true);

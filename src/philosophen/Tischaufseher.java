@@ -1,15 +1,16 @@
 package philosophen;
 
-import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Tischaufseher implements Runnable {
-	ArrayList<Philosoph> philosophen = new ArrayList<Philosoph>();
+	private final static Logger LOG = Logger.getLogger(Tischaufseher.class
+			.getName());
+	private List<Philosoph> philosophen;
 	private Integer abweichung = 10;
-	private Integer sperrzeit = 1000;
+	private final Integer sperrzeit = 5;
 
-	public Tischaufseher(ArrayList<Philosoph> philosophen) {
+	public Tischaufseher(List<Philosoph> philosophen) {
 		this.philosophen = philosophen;
 	}
 
@@ -17,22 +18,28 @@ public class Tischaufseher implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOG.info(this.toString() + " wurde beendet");
 			}
 
-			Integer summe = 0;
+			Integer kleinsterWert = philosophen.get(0).getAlleEssen();
 			for (Philosoph p : philosophen) {
-				summe += p.getAlleEssvorgaenge();
+				if(p.getAlleEssen() < kleinsterWert) {
+					kleinsterWert = p.getAlleEssen();
+				}
 			}
-			Integer durchschnitt = summe / philosophen.size();
 
 			for (Philosoph p : philosophen) {
-				if (durchschnitt + abweichung < p.getAlleEssvorgaenge()) {
-					p.sperreFuer(sperrzeit);
+				if (kleinsterWert + abweichung < p.getAlleEssen()) {
+					p.sperreFuer(sperrzeit * (p.getAlleEssen() - kleinsterWert + abweichung));
 				}
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Tischaufseher";
 	}
 }

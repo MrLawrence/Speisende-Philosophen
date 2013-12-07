@@ -17,13 +17,13 @@ public class Philosoph implements Runnable {
 	private Gabel linkeGabel;
 	private Gabel rechteGabel;
 
-	private Integer essvorgaenge = 0;
-	private Integer essvorgaengeVorSchlaf = 0;
+	private Integer essen = 0;
+	private Integer essenVorSchlaf = 0;
 	private Integer denkzeit = 10;
 	private Integer schlafzeit = 100;
 	private Integer esszeit = 2;
 	private Integer sperrzeit = 0;
-	private Integer maxEssvorgaenge = 3;
+	private Integer maxEssen = 3;
 	private Boolean istHungrig;
 
 	public Philosoph(Tisch tisch, Boolean istHungrig) {
@@ -54,7 +54,7 @@ public class Philosoph implements Runnable {
 			LOG.info(this.toString() + " isst auf " + stuhl.toString());
 			Thread.sleep(esszeit);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOG.info(this.toString() + " wurde beendet");
 		}
 		tisch.aufstehen(stuhl);
 		legGabelnAb();
@@ -78,30 +78,30 @@ public class Philosoph implements Runnable {
 	}
 
 	private void denken() {
-		essvorgaenge += 1;
-		essvorgaengeVorSchlaf += 1;
+		essen += 1;
+		essenVorSchlaf += 1;
 		LOG.fine(this.toString() + " beginnt denken nach "
-				+ essvorgaengeVorSchlaf + " Essen");
+				+ essenVorSchlaf + " Essen");
 
 		try {
 			Thread.sleep(denkzeit);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			LOG.warning(this.toString() + " wurde beendet");
 		}
 
-		if (essvorgaengeVorSchlaf.equals(maxEssvorgaenge)) {
+		if (essenVorSchlaf.equals(maxEssen)) {
 			try {
 				Thread.sleep(schlafzeit);
 				LOG.info(this.toString() + " schläft");
-				essvorgaengeVorSchlaf = 0;
+				essenVorSchlaf = 0;
 			} catch (InterruptedException e) {
 				LOG.severe(this.toString() + " konnte nicht schlafen");
 			}
 		}
 	}
 
-	public Integer getAlleEssvorgaenge() {
-		return essvorgaenge;
+	public Integer getAlleEssen() {
+		return essen;
 	}
 
 	public void sperreFuer(Integer sperrzeit) {
@@ -111,7 +111,7 @@ public class Philosoph implements Runnable {
 	private void sperrzeitAbsitzen() {
 		if (sperrzeit != 0) {
 			try {
-				LOG.info(this.toString() + " gesperrt für " + this.sperrzeit);
+				LOG.info(this.toString() + " gesperrt für " + this.sperrzeit + "ms");
 				Thread.sleep(sperrzeit);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -121,7 +121,7 @@ public class Philosoph implements Runnable {
 	}
 
 	public void printStats() {
-		System.out.println(this.toString() + ": " + essvorgaenge + " Essen");
+		System.out.println(this.toString() + ": " + essen + " Essen");
 	}
 
 	@Override
