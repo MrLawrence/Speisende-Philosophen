@@ -32,7 +32,7 @@ public class Tischaufseher implements Runnable {
 
 			for (Philosoph p : philosophen) {
 				if (kleinsterWert + abweichung < p.getAlleEssen()) {
-					p.sperreFuer(sperrzeit * (p.getAlleEssen() - kleinsterWert + abweichung));
+					p.sperreFuer(sperrzeit * (p.getAlleEssen() - (kleinsterWert + abweichung)));
 				}
 			}
 		}
