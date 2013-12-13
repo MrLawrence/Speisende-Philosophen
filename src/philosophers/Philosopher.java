@@ -15,13 +15,13 @@ public class Philosopher implements Runnable {
 	private Table table;
 	private Chair chair;
 
-	private Integer meals = 0;
-	private Integer mealsBeforeSleep = 0;
+	private Integer totalMeals = 0;
+	private Integer mealsBeforeSleep = 3;
 	private Integer thinkTime = 10;
 	private Integer sleepTime = 100;
 	private Integer mealTime = 2;
 	private Integer penaltyTime = 0;
-	private Integer maxMeals = 3;
+
 	private Boolean isHungry;
 
 	public Philosopher(Table table, Boolean isHungry) {
@@ -40,9 +40,15 @@ public class Philosopher implements Runnable {
 			chair = table.getFreeChair();
 			chair.sitDown();
 			LOG.fine(this.toString() + " sits on " + chair.toString());
+			
 			penalty();
 			eat();
+			
+			chair.leave();
+			table.notifyFreeChair();
+			
 			think();
+			sleep();
 		}
 	}
 
@@ -54,15 +60,12 @@ public class Philosopher implements Runnable {
 		} catch (InterruptedException e) {
 			LOG.info(this.toString() + " was interrupted");
 		}
-		chair.leave();
-		table.notifyFreeChair();
+
 	}
 
 	private void think() {
-		meals += 1;
-		mealsBeforeSleep += 1;
-		LOG.fine(this.toString() + " starts eating after " + mealsBeforeSleep
-				+ " meals");
+		totalMeals += 1;
+		LOG.fine(this.toString() + " starts eating (Meal #" + totalMeals + ")");
 
 		try {
 			Thread.sleep(thinkTime);
@@ -70,11 +73,13 @@ public class Philosopher implements Runnable {
 			LOG.info(this.toString() + " was interrupted");
 		}
 
-		if (mealsBeforeSleep.equals(maxMeals)) {
+	}
+
+	private void sleep() {
+		if (totalMeals % mealsBeforeSleep == 0) {
 			try {
 				Thread.sleep(sleepTime);
 				LOG.info(this.toString() + " sleeps");
-				mealsBeforeSleep = 0;
 			} catch (InterruptedException e) {
 				LOG.info(this.toString() + " was interrupted");
 			}
@@ -82,7 +87,7 @@ public class Philosopher implements Runnable {
 	}
 
 	public Integer getMealsAmount() {
-		return meals;
+		return totalMeals;
 	}
 
 	public void banFor(Integer penaltyTime) {
@@ -96,14 +101,14 @@ public class Philosopher implements Runnable {
 						+ "ms");
 				Thread.sleep(penaltyTime);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOG.info(this.toString() + " was interrupted");
 			}
 			penaltyTime = 0;
 		}
 	}
 
 	public void printStats() {
-		System.out.println(this.toString() + ": " + meals + " meals");
+		System.out.println(this.toString() + ": " + totalMeals + " meals");
 	}
 
 	@Override
