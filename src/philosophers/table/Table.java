@@ -11,7 +11,7 @@ public class Table {
 	private List<Chair> chairs = new ArrayList<Chair>();
 	private List<ReentrantLock> forks = new ArrayList<ReentrantLock>();
 	private Semaphore freeChairs;
-	private Waitress kellner = new Waitress(chairs);
+	private Waitress waitress = new Waitress(chairs);
 
 	public Table(Integer chairAmount) {
 		freeChairs = new Semaphore(chairAmount, true);
@@ -24,7 +24,7 @@ public class Table {
 		} catch (InterruptedException e) {
 			LOG.info(this.toString() + " was interrupted");
 		}
-		return kellner.findChair();
+		return waitress.findChair();
 
 	}
 
