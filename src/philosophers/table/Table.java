@@ -2,6 +2,7 @@ package philosophers.table;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -10,22 +11,15 @@ public class Table {
 	private final static Logger LOG = Logger.getLogger(Table.class.getName());
 	private List<Chair> chairs = new ArrayList<Chair>();
 	private List<ReentrantLock> forks = new ArrayList<ReentrantLock>();
-	private Semaphore freeChairs;
-	private Waitress waitress = new Waitress(chairs);
+    private Random randomGenerator;
 
 	public Table(Integer chairAmount) {
-		freeChairs = new Semaphore(chairAmount, true);
 		addChairsandForks(chairAmount);
+		randomGenerator = new Random();
 	}
 
-	public synchronized Chair getFreeChair() {
-		try {
-			freeChairs.acquire();
-		} catch (InterruptedException e) {
-			LOG.info(this.toString() + " was interrupted");
-		}
-		return waitress.findChair();
-
+	public Chair getChair() {
+		return chairs.get(randomGenerator.nextInt(chairs.size()));
 	}
 
 	private void addChairsandForks(Integer chairAmount) {
@@ -42,10 +36,6 @@ public class Table {
 				chairs.add(new Chair(forks.get(i), forks.get(i + 1)));
 			}
 		}
-	}
-
-	public void notifyFreeChair() {
-		freeChairs.release();
 	}
 
 	@Override
